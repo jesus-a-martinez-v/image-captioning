@@ -1,0 +1,1 @@
+Given the models files are so large, you can download them [here](https://drive.google.com/drive/folders/1p7wd3TIDtBNvOREQtUsk2kxOCI2dKDjI?usp=sharing) and place them inside this folder.
