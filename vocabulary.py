@@ -1,19 +1,21 @@
-import nltk
-import pickle
 import os.path
-from pycocotools.coco import COCO
+import pickle
 from collections import Counter
+
+import nltk
+from pycocotools.coco import COCO
+
 
 class Vocabulary(object):
 
     def __init__(self,
-        vocab_threshold,
-        vocab_file='./vocab.pkl',
-        start_word="<start>",
-        end_word="<end>",
-        unk_word="<unk>",
-        annotations_file='../cocoapi/annotations/captions_train2014.json',
-        vocab_from_file=False):
+                 vocab_threshold,
+                 vocab_file='./vocab.pkl',
+                 start_word="<start>",
+                 end_word="<end>",
+                 unk_word="<unk>",
+                 annotations_file='../cocoapi/annotations/captions_train2014.json',
+                 vocab_from_file=False):
         """Initialize the vocabulary.
         Args:
           vocab_threshold: Minimum word count threshold.
@@ -33,6 +35,9 @@ class Vocabulary(object):
         self.annotations_file = annotations_file
         self.vocab_from_file = vocab_from_file
         self.get_vocab()
+        self.word2idx = None
+        self.idx2word = None
+        self.idx = 0
 
     def get_vocab(self):
         """Load the vocabulary from file OR build the vocabulary from scratch."""
@@ -46,7 +51,7 @@ class Vocabulary(object):
             self.build_vocab()
             with open(self.vocab_file, 'wb') as f:
                 pickle.dump(self, f)
-        
+
     def build_vocab(self):
         """Populate the dictionaries for converting tokens to integers (and vice-versa)."""
         self.init_vocab()
@@ -63,7 +68,7 @@ class Vocabulary(object):
 
     def add_word(self, word):
         """Add a token to the vocabulary."""
-        if not word in self.word2idx:
+        if word not in self.word2idx:
             self.word2idx[word] = self.idx
             self.idx2word[self.idx] = word
             self.idx += 1
@@ -87,7 +92,7 @@ class Vocabulary(object):
             self.add_word(word)
 
     def __call__(self, word):
-        if not word in self.word2idx:
+        if word not in self.word2idx:
             return self.word2idx[self.unk_word]
         return self.word2idx[word]
 
